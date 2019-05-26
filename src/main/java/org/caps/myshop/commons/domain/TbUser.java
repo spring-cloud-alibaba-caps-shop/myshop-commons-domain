@@ -1,27 +1,35 @@
 package org.caps.myshop.commons.domain;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import org.caps.myshop.commons.dto.AbstractBaseDomain;
+import org.caps.myshop.commons.utils.RegexpUtils;
+import org.hibernate.validator.constraints.Length;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.util.Date;
 
 @Table(name = "tb_user")
-public class TbUser implements Serializable {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class TbUser extends AbstractBaseDomain implements Serializable{
     private static final long serialVersionUID = 2301202966302521275L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+
 
     /**
      * 用户名
      */
+    @NotNull(message = "用户名不可为空")
+    @Length(min = 6, max = 20, message = "用户名长度必须介于 6 和 20 之间")
     private String username;
 
     /**
      * 密码，加密存储
      */
+    @NotNull(message = "密码不可为空")
+    @JsonIgnore
+    @Length(min = 6, max = 20, message = "密码长度必须介于 6 和 20 之间")
     private String password;
 
     /**
@@ -32,25 +40,10 @@ public class TbUser implements Serializable {
     /**
      * 注册邮箱
      */
+    @NotNull(message = "邮箱不可为空")
+    @Pattern(regexp = RegexpUtils.EMAIL, message = "邮箱格式不正确")
     private String email;
 
-    private Date created;
-
-    private Date updated;
-
-    /**
-     * @return id
-     */
-    public Long getId() {
-        return id;
-    }
-
-    /**
-     * @param id
-     */
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     /**
      * 获取用户名
@@ -124,31 +117,4 @@ public class TbUser implements Serializable {
         this.email = email;
     }
 
-    /**
-     * @return created
-     */
-    public Date getCreated() {
-        return created;
-    }
-
-    /**
-     * @param created
-     */
-    public void setCreated(Date created) {
-        this.created = created;
-    }
-
-    /**
-     * @return updated
-     */
-    public Date getUpdated() {
-        return updated;
-    }
-
-    /**
-     * @param updated
-     */
-    public void setUpdated(Date updated) {
-        this.updated = updated;
-    }
 }
